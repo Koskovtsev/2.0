@@ -1,14 +1,60 @@
-const Matador = () =>
-    <div><img src="../src/assets/matador.png" style={{ width: '150px', height: '200px' }}
-        alt="matador"></img></div>
-const matadorPosition = document.querySelector('.matador');
-const BullRun = document.addEventListener('bullRun', (event) => {
-    const pos = event as CustomEvent;
-    let bullPosition = pos.detail.position;
+import { useState, useEffect } from "react";
+import applauseSound from '../assets/03.mp3';
+// import matadorImage from '../src/assets/matador.png'
+let globalMatadorPosition: number;
+let globalMatador: any;
+let someGlobalFunc;
 
-    if (bullPosition === 2) {
-        console.log('matador pos: ', matadorPosition);
-        console.log("we have to get out of here!");
+type properties = { applause?: number, setMatarodPosition?(params: number): void, matadorPosition?: number };
+
+const Matador = (props: properties) => {
+    // globalMatadorPosition = props?.matadorPosition || 0;
+    const [notGlobalMatador, notGlobalFunc] = useState(props.applause);
+    // const [applause, setApplause] = useEffect(props?.applause);
+
+    function handleBull(event: any) {
+        const pos = event;
+        let bullPosition = pos.detail.position;
+
+        if (bullPosition === props.matadorPosition) {
+            const currentMatadorPosition = props.matadorPosition;
+            const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
+            props.setMatarodPosition?.(newMatadorPosition);
+            console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition}`);
+        }
     }
-});
+
+    useEffect(() => {
+        if (props.applause === 3 && notGlobalMatador !== 3) {
+            console.log("ОПЛЕСКИ 3!");
+            const oleAudio = new Audio(applauseSound);
+            oleAudio.play().catch(e => console.log('audio is blocked'));
+        } else {
+            if(props.applause === 3 && notGlobalMatador === 3){
+                console.log('це могли бути повторні ОПЛЕСКИ 3');
+            }
+        }
+        notGlobalFunc(props.applause);
+        
+    }, [props.applause]);
+
+    useEffect(() => {
+        const BullRun = document.addEventListener('bullRun', handleBull);
+        return () => {
+            document.removeEventListener('bullRun', handleBull);
+        }
+    }, []);
+    console.log('матадор відрендерився')
+
+    return <div><img src="../src/assets/matador.png" style={{ width: '150px', height: '200px' }} alt="matador"></img></div>
+}
+
+function getRandomPosition(number: number) {
+    let newPosition = Math.floor(Math.random() * 8);
+    if (newPosition >= number) {
+        newPosition += 1;
+    }
+    return newPosition;
+}
+
 export { Matador };

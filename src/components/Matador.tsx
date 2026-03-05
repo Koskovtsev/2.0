@@ -6,17 +6,16 @@ let globalMatador: any;
 let someGlobalFunc;
 
 type properties = { applause?: number, setMatarodPosition?(params: number): void, matadorPosition?: number };
-
+declare global {
+    interface DocumentEventMap {
+        'bullRun': CustomEvent<{ position: number }>;
+    }
+}
 const Matador = (props: properties) => {
-    // globalMatadorPosition = props?.matadorPosition || 0;
     const [notGlobalMatador, notGlobalFunc] = useState(props.applause);
-    // const [applause, setApplause] = useEffect(props?.applause);
 
-    function handleBull(event: any) {
-        const pos = event;
-        let bullPosition = pos.detail.position;
-
-        if (bullPosition === props.matadorPosition) {
+    const handleNewBull = ({ detail }: CustomEvent<{ position: number }>) => {
+        if (detail.position === props.matadorPosition) {
             const currentMatadorPosition = props.matadorPosition;
             const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
             props.setMatarodPosition?.(newMatadorPosition);
@@ -24,24 +23,36 @@ const Matador = (props: properties) => {
         }
     }
 
+    //     function handleBull(event: any) {
+    //     const pos = event;
+    //     let bullPosition = pos.detail.position;
+
+    //     if (bullPosition === props.matadorPosition) {
+    //         const currentMatadorPosition = props.matadorPosition;
+    //     const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
+    //     props.setMatarodPosition?.(newMatadorPosition);
+    //     console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition}`);
+    //     }
+    // }
+
     useEffect(() => {
         if (props.applause === 3 && notGlobalMatador !== 3) {
             console.log("ОПЛЕСКИ 3!");
             const oleAudio = new Audio(applauseSound);
             oleAudio.play().catch(e => console.log('audio is blocked'));
         } else {
-            if(props.applause === 3 && notGlobalMatador === 3){
+            if (props.applause === 3 && notGlobalMatador === 3) {
                 console.log('це могли бути повторні ОПЛЕСКИ 3');
             }
         }
         notGlobalFunc(props.applause);
-        
+
     }, [props.applause]);
 
     useEffect(() => {
-        const BullRun = document.addEventListener('bullRun', handleBull);
+        document.addEventListener('bullRun', handleNewBull);
         return () => {
-            document.removeEventListener('bullRun', handleBull);
+            document.removeEventListener('bullRun', handleNewBull);
         }
     }, []);
     console.log('матадор відрендерився')

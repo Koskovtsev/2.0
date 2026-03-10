@@ -6,15 +6,17 @@ let globalMatador: any;
 let someGlobalFunc;
 
 type properties = { applause?: number, setMatarodPosition?(params: number): void, matadorPosition?: number };
+
 declare global {
     interface DocumentEventMap {
         'bullRun': CustomEvent<{ position: number }>;
     }
 }
 const Matador = (props: properties) => {
+    let isHaveToRender = false;
     const [notGlobalMatador, notGlobalFunc] = useState(props.applause);
 
-    const handleNewBull = ({ detail }: CustomEvent<{ position: number }>) => {
+    const handleBull = ({ detail }: CustomEvent<{ position: number }>) => {
         if (detail.position === props.matadorPosition) {
             const currentMatadorPosition = props.matadorPosition;
             const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
@@ -22,18 +24,6 @@ const Matador = (props: properties) => {
             console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition}`);
         }
     }
-
-    //     function handleBull(event: any) {
-    //     const pos = event;
-    //     let bullPosition = pos.detail.position;
-
-    //     if (bullPosition === props.matadorPosition) {
-    //         const currentMatadorPosition = props.matadorPosition;
-    //     const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
-    //     props.setMatarodPosition?.(newMatadorPosition);
-    //     console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition}`);
-    //     }
-    // }
 
     useEffect(() => {
         if (props.applause === 3 && notGlobalMatador !== 3) {
@@ -50,14 +40,14 @@ const Matador = (props: properties) => {
     }, [props.applause]);
 
     useEffect(() => {
-        document.addEventListener('bullRun', handleNewBull);
+        document.addEventListener('bullRun', handleBull);
         return () => {
-            document.removeEventListener('bullRun', handleNewBull);
+            document.removeEventListener('bullRun', handleBull);
         }
     }, []);
     console.log('матадор відрендерився')
 
-    return <div><img src="../src/assets/matador.png" style={{ width: '150px', height: '200px' }} alt="matador"></img></div>
+    return isHaveToRender ? <div><img src="../src/assets/matador.png" style={{ width: '150px', height: '200px' }} alt="matador"></img></div>
 }
 
 function getRandomPosition(number: number) {

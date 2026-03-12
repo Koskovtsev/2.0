@@ -48,7 +48,7 @@ const ArenaWithBull = ({ matador }: ArenaWithBullProps) => {
         }
     }, []);
     return <div className='duelWrapper'>
-        <h1>Bullfighing Arena</h1>
+        <h1>Bullfighting Arena</h1>
         <div className='arena'>
             <div className={"duel"}>
                 <div className="cell">

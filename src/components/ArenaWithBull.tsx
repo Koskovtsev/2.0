@@ -24,7 +24,7 @@ const ArenaWithBull = ({ matador }: ArenaWithBullProps) => {
         }, 800);
         // respond to custom Events
         const dispatchRunInterval = setInterval(() => {
-            const position = Math.floor(Math.random() * 8)
+            const position = Math.floor(Math.random() * 9)
             const BullRun = new CustomEvent('bullRun', {
                 detail: {
                     position

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import applauseSound from '../assets/applause-509.wav';
+import matadorImg from '../assets/matador.png';
 
 type properties = { applause?: number, setMatarodPosition?(params: number): void, matadorPosition?: number };
 
@@ -17,7 +18,7 @@ const Matador = (props: properties) => {
             const currentMatadorPosition = props.matadorPosition;
             const newMatadorPosition = getRandomPosition(currentMatadorPosition || 0);
             props.setMatarodPosition?.(newMatadorPosition);
-            console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition} and ref is`);
+            console.log(`Matador is moving from ${currentMatadorPosition} to ${newMatadorPosition}`);
         }
     }
 
@@ -41,7 +42,8 @@ const Matador = (props: properties) => {
             document.removeEventListener('bullRun', handleBull);
         }
     }, []);
-    return <div><img src="../src/assets/matador.png" style={{ width: '150px', height: '200px' }} alt="matador"></img></div>;
+
+    return <div><img src={matadorImg} style={{ width: '150px', height: '200px' }} alt="matador"></img></div>;
 }
 
 function getRandomPosition(number: number) {

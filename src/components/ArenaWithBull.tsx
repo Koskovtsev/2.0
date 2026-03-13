@@ -16,7 +16,7 @@ const ArenaWithBull = ({ matador }: ArenaWithBullProps) => {
         // ignore props until 3
         const applauseInterval = setInterval(() => {
             setApplause(Math.floor(Math.random() * 4))
-        }, 1000);                                   // TODO: помінять назад на 1000
+        }, 1000);                               
 
         // purpose Parent rerender 
         const screamInterval = setInterval(() => {
@@ -24,7 +24,7 @@ const ArenaWithBull = ({ matador }: ArenaWithBullProps) => {
         }, 800);
         // respond to custom Events
         const dispatchRunInterval = setInterval(() => {
-            const position = Math.floor(Math.random() * 9)
+            const position = Math.floor(Math.random() * 8)
             const BullRun = new CustomEvent('bullRun', {
                 detail: {
                     position
@@ -32,13 +32,13 @@ const ArenaWithBull = ({ matador }: ArenaWithBullProps) => {
             })
             setTimeout(() => {
                 setBullPosition(position)
-            }, 1000)                             //TODO : помінять назад на 1000
+            }, 1000)                          
             document.dispatchEvent(BullRun);
-        }, 1500);                               // TODO : помінять назад на 1500
+        }, 1500);                              
         // remove event listener on unmount
         const visibilityInterval = setInterval(() => {
             setIsVisible((oldIsVisible) => !oldIsVisible);
-        }, 20000);                              // TODO: : помінять назад на 20000
+        }, 20000);                           
 
         return () => {
             clearInterval(screamInterval);

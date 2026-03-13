@@ -1,7 +1,9 @@
 import React from "react";
-import applauseSound from '../assets/preview.mp3';
 import matadorImg from '../assets/matador.png';
-
+import sound1 from '../assets/01.wav';
+import sound2 from '../assets/02.wav';
+import sound3 from '../assets/03.mp3';
+import sound4 from '../assets/04.mp3';
 // type properties = { applause?: number, setMatarodPosition?(params: number): void, matadorPosition?: number };
 type MyProps = {
     applause?: number,
@@ -20,7 +22,13 @@ type MyState = {
     // myAction: (val: number) => void,
     // setMatarodPosition?(params: number): void,
 };
-
+const sounds = [sound1, sound2, sound3, sound4];
+const audioFiles = [
+    new Audio(sound1),
+    new Audio(sound2),
+    new Audio(sound3),
+    new Audio(sound4),
+];
 class Matador extends React.PureComponent<MyProps, MyState> {
     constructor(props: MyProps) {
         super(props);
@@ -32,7 +40,6 @@ class Matador extends React.PureComponent<MyProps, MyState> {
             // setMatadorPos: myAction(),
         }
     }
-
 
 
 
@@ -49,16 +56,25 @@ class Matador extends React.PureComponent<MyProps, MyState> {
         document.addEventListener('bullRun', this.handleBull);
     }
     componentDidUpdate(prevProps: Readonly<MyProps>, prevState: Readonly<MyState>, snapshot?: any): void {
-        if (this.props.applause === 3 && this.state.applause !== 3) {
-            const oleAudio = new Audio(applauseSound);
-            console.log("applouse!!!(3) ");
+        if (this.props.applause !== prevProps.applause && this.props.applause !== undefined) {
+            const soundIndex = this.props.applause; // 0, 1, 2 або 3
+            const audio = audioFiles[this.props.applause];
+            console.log(`Грає звук для типу оплесків: ${soundIndex}`);
+            audio.play().catch(e => console.log("Audio blocked"));
 
-            oleAudio.play().catch(e => console.log('audio is blocked'));
+        }
+
+        if (this.props.applause === 3 && this.state.applause !== 3) {
+            // const oleAudio = new Audio(applauseSound);
+            // console.log("applouse!!!(3) ");
+            console.log("Оплески рівня 3! Оновлюємо стейт для рендеру.");
+            // oleAudio.play().catch(e => console.log('audio is blocked'));
             this.setState({ applause: 3 })
             // setApplause(3);
         }
         else {
-            if (this.props.applause !== 3 && this.state.applause !== this.props.applause) {
+            // if (this.props.applause !== 3 && this.state.applause !== this.props.applause) {
+            if (this.props.applause !== 3 && this.state.applause === 3) {
                 this.setState({ applause: this.props.applause })
                 // setApplause(this.props.applause);
             }

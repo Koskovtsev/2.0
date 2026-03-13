@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import { memo } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import matadorImg from '../assets/matador.png';
 import sound1 from '../assets/01.wav';
 import sound2 from '../assets/02.wav';
@@ -23,7 +22,6 @@ const Matador = memo((props: properties) => {
     const [applause, setApplause] = useState(props.applause);
 
     const posRef = useRef(props.matadorPosition);
-
     posRef.current = props.matadorPosition;
 
     // const startTime = useRef(Date.now());
@@ -31,7 +29,6 @@ const Matador = memo((props: properties) => {
     // const timePassed = ((Date.now() - startTime.current) / 1000).toFixed(2);
     // renderCount.current += 1;
     // console.log(`Матадор відрендерився ${renderCount.current} разів. Час життя: ${timePassed} сек.`);
-
 
     const handleBull = (event: DocumentEventMap['bullRun']) => {
         if (event.detail.position === posRef.current) {
@@ -61,24 +58,19 @@ const Matador = memo((props: properties) => {
     }, []);
 
     return <div><img src={matadorImg} style={{ width: '150px', height: '200px' }} alt="matador"></img></div>;
-},
-    (prevProps, nextProps) => {
-        if (prevProps.applause === 3 && nextProps.applause === 3) {
-            return true;
-        }
-        if (nextProps.applause === 3 || prevProps.applause === 3 || prevProps.matadorPosition !== nextProps.matadorPosition) {
-            return false;
-        }
+}, (prevProps, nextProps) => {
+    if (prevProps.applause === 3 && nextProps.applause === 3) {
         return true;
     }
-);
+    if (nextProps.applause === 3 || prevProps.applause === 3 || prevProps.matadorPosition !== nextProps.matadorPosition) {
+        return false;
+    }
+    return true;
+});
 
 function getRandomPosition(number: number) {
     let newPosition = Math.floor(Math.random() * 8);
-    if (newPosition >= number) {
-        newPosition += 1;
-    }
-    return newPosition;
+    return newPosition >= number ? newPosition + 1 : newPosition;
 }
 
 export { Matador };
